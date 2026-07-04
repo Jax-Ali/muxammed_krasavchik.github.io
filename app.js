@@ -1,4 +1,5 @@
 const eventDate = new Date("2026-08-22T18:00:00+05:00");
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5iCmo_6_IkICJBgTyQkJICM3f5fymhP3gLb0fy3E8MS88IHRKFEfCNGf4KAj2HIi0lw/exec";
 const revealItems = document.querySelectorAll(".reveal");
 const modal = document.getElementById("modal");
 const modalText = document.getElementById("modalText");
@@ -38,8 +39,10 @@ document.querySelectorAll(".choice").forEach(button => {
 document.querySelector(".reply-form").addEventListener("submit", event => {
   event.preventDefault();
   const name = document.getElementById("guestName").value.trim();
+  sendToSheet({ type: "rsvp", name: name || "Қонақ", answer: selectedReply });
   modalText.textContent = `${name || "Қонақ"}, жауабыңыз қабылданды: ${selectedReply}`;
   openModal(modal);
+  event.target.reset();
 });
 
 document.getElementById("modalClose").addEventListener("click", () => closeModal(modal));
@@ -56,6 +59,7 @@ document.getElementById("wishForm").addEventListener("submit", event => {
 
   if (!name || !text) return;
 
+  sendToSheet({ type: "wish", name: name, text: text });
   const card = document.createElement("article");
   card.innerHTML = `<strong>${escapeHtml(name)}</strong><p>${escapeHtml(text)}</p>`;
   wishList.prepend(card);
@@ -179,3 +183,13 @@ function updateCountdown() {
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+function sendToSheet(data) {
+  if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "ВСТАВЬТЕ_СЮДА_ВАШ_URL") return;
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+}
