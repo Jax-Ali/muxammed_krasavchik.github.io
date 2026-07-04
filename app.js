@@ -1,4 +1,4 @@
-const eventDate = new Date("2026-08-22T19:00:00+05:00");
+const eventDate = new Date("2026-08-22T18:00:00+05:00");
 const revealItems = document.querySelectorAll(".reveal");
 const modal = document.getElementById("modal");
 const modalText = document.getElementById("modalText");
