@@ -20,10 +20,12 @@ const observer = new IntersectionObserver(
   { threshold: 0.18 }
 );
 
-revealItems.forEach((item, index) => {
-  item.style.setProperty("--delay", `${Math.min(index % 4, 3) * 90}ms`);
-  observer.observe(item);
-});
+const startReveals = () => {
+  revealItems.forEach((item, index) => {
+    item.style.setProperty("--delay", `${Math.min(index % 4, 3) * 90}ms`);
+    observer.observe(item);
+  });
+};
 
 document.querySelectorAll(".choice").forEach(button => {
   button.addEventListener("click", () => {
@@ -98,9 +100,38 @@ const initAudio = () => {
   document.removeEventListener("touchstart", initAudio);
   document.removeEventListener("scroll", initAudio);
 };
-document.addEventListener("click", initAudio);
-document.addEventListener("touchstart", initAudio);
-document.addEventListener("scroll", initAudio);
+
+const envelopeOverlay = document.getElementById("envelopeOverlay");
+const envelopeWrapper = document.getElementById("envelopeWrapper");
+
+if (envelopeWrapper && envelopeOverlay) {
+  envelopeWrapper.addEventListener("click", () => {
+    // Start animation
+    envelopeWrapper.classList.add("open");
+    
+    // Start audio
+    initAudio();
+
+    // After envelope opens, fade out overlay
+    setTimeout(() => {
+      envelopeOverlay.classList.add("hidden");
+      
+      // Start reveals after overlay starts fading
+      startReveals();
+
+      // Remove from DOM to prevent blocking
+      setTimeout(() => {
+        envelopeOverlay.style.display = "none";
+      }, 1200);
+    }, 1500);
+  });
+} else {
+  // If no envelope, just start reveals
+  startReveals();
+  document.addEventListener("click", initAudio);
+  document.addEventListener("touchstart", initAudio);
+  document.addEventListener("scroll", initAudio);
+}
 
 setInterval(() => {
   const first = wishList.firstElementChild;
