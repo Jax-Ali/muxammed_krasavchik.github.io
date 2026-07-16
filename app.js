@@ -1,4 +1,4 @@
-const eventDate = new Date("2026-08-22T18:00:00+05:00");
+const eventDate = new Date("2026-08-22T17:00:00+05:00");
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJpcqolMlpfDjjS-DNX3pC6Z37WzC8cWEC-s6OHJhUhVsRP9KYygVKGYfxoUOrDgXXbQ/exec";
 const revealItems = document.querySelectorAll(".reveal");
 const modal = document.getElementById("modal");
